@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: "",
+    userName: "",
     webSocketUrl:
       "wss://6o0lfe2404.execute-api.ap-northeast-1.amazonaws.com/production",
   },

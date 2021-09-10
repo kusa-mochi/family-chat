@@ -1,14 +1,42 @@
 <template>
   <div id="login">
-    <div v-show="inputLabelVisible" class="input-label">パスワード違うし</div>
-    <input v-model="password" placeholder="パスワード" type="password" />
-    <button @click="onClickSubmitButton">OK</button>
+    <div class="form-container">
+      <div v-show="inputLabelVisible" class="invalid-password-label">
+        パスワード違うし
+      </div>
+      <div class="password-forms">
+        <input v-model="userName" placeholder="なまえ" type="text" />
+        <input
+          v-model="password"
+          @keyup.enter="onClickSubmitButton"
+          placeholder="パスワード"
+          type="password"
+        />
+        <button @click="onClickSubmitButton">OK</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   computed: {
+    token: {
+      get() {
+        return this.$store.state.token;
+      },
+      set(newValue) {
+        this.$store.state.token = newValue;
+      },
+    },
+    userName: {
+      get() {
+        return this.$store.state.userName;
+      },
+      set(newValue) {
+        this.$store.state.userName = newValue;
+      },
+    },
     webSocketUrl: {
       get() {
         return this.$store.state.webSocketUrl;
@@ -17,6 +45,16 @@ export default {
   },
   created() {
     this.initializeWebSocket();
+    if (this.token) {
+      this.socket.send(
+        JSON.stringify({
+          action: "validateToken",
+          data: {
+            token: this.token,
+          },
+        })
+      );
+    }
   },
   data() {
     return {
@@ -41,9 +79,18 @@ export default {
           this.token = parsedData.data.token;
           this.$router.push("/chat");
           return;
+        } else if (parsedData.dataType === "validToken") {
+          // トークンが正しいと承認された場合
+          this.$router.push("/chat");
+          return;
         } else if (parsedData.dataType === "invalidPassword") {
           // パスワードが違った場合
           this.inputLabelVisible = true;
+          return;
+        } else if (parsedData.dataType === "invalidToken") {
+          // トークンがシステムに登録されていないか、
+          // もしくは有効期限切れで削除された後である場合
+          // 何もしない。（ユーザにパスワード入力してもらう）
         }
       };
       this.socket.onclose = (e) => {
@@ -73,7 +120,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.input-label {
+#login {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.form-container {
+  width: 360px;
+  height: 100%;
+  padding: 16px;
+  background-color: #f0f0f0;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.password-forms {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.invalid-password-label {
   color: red;
 }
 </style>
