@@ -144,10 +144,10 @@ export default {
 }
 .password-forms {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: flex-start;
 }
 .invalid-password-label {
   color: red;
