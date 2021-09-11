@@ -8,20 +8,17 @@
         </div>
       </div>
       <div class="chat-form-container">
-        <input
+        <el-input
           v-model="stringToSend"
           @keyup.enter="sendChat"
           class="chat-input"
           placeholder="書きたい文をここに書いてね"
-        />
-        <button
+        ></el-input>
+        <el-button
           @click="sendChat"
           :disabled="!isSendButtonEnabled"
           class="send-button"
-          type="button"
-        >
-          <img class="send-button-icon" src="@/assets/baby.svg" />
-        </button>
+        >送信</el-button>
       </div>
     </div>
   </div>
@@ -204,7 +201,6 @@ export default {
 }
 .chat-form-container {
   width: 100%;
-  height: 24px;
 
   display: flex;
   flex-direction: row;
@@ -214,13 +210,10 @@ export default {
 }
 .chat-input {
   width: calc(100% - 32px);
-  height: 24px;
 }
 .send-button {
   width: 32px;
-  height: 24px;
 }
-.send-button-icon {
-  height: 24px;
-}
+// .send-button-icon {
+// }
 </style>
