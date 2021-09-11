@@ -26,7 +26,7 @@ export default {
         return this.$store.state.token;
       },
       set(newValue) {
-        this.$store.state.token = newValue;
+        this.$store.dispatch("setToken", newValue);
       },
     },
     userName: {
@@ -34,7 +34,7 @@ export default {
         return this.$store.state.userName;
       },
       set(newValue) {
-        this.$store.state.userName = newValue;
+        this.$store.dispatch("setUserName", newValue);
       },
     },
     webSocketUrl: {
@@ -47,19 +47,6 @@ export default {
     console.log("creating login component..");
     if (this.socket === null) {
       this.initializeWebSocket();
-    }
-    if (this.token) {
-      console.log(`token exist on local storage: ${this.token}`);
-      this.socket.send(
-        JSON.stringify({
-          action: "validateToken",
-          data: {
-            token: this.token,
-          },
-        })
-      );
-    } else {
-      console.log("token is not found on local storage.");
     }
   },
   data() {
@@ -76,6 +63,22 @@ export default {
       this.socket = new WebSocket(this.webSocketUrl);
       this.socket.onopen = (e) => {
         console.log(e);
+
+        // ローカルストレージにトークンが保存されている場合
+        if (this.token) {
+          console.log(`token exist on local storage: ${this.token}`);
+          // トークンがまだ有効かLambdaに問い合わせる。
+          this.socket.send(
+            JSON.stringify({
+              action: "validateToken",
+              data: {
+                token: this.token,
+              },
+            })
+          );
+        } else {
+          console.log("token is not found on local storage.");
+        }
       };
       this.socket.onmessage = (e) => {
         const parsedData = JSON.parse(e.data);
@@ -87,7 +90,7 @@ export default {
           this.$router.push("/chat");
           return;
         } else if (parsedData.dataType === "validToken") {
-          // トークンが正しいと承認された場合
+          // トークンが有効と判定された場合
           this.$router.push("/chat");
           return;
         } else if (parsedData.dataType === "invalidPassword") {
@@ -104,7 +107,7 @@ export default {
       };
       this.socket.onclose = (e) => {
         console.log(e);
-        // this.initializeWebSocket();
+        this.initializeWebSocket();
       };
       this.socket.onerror = (e) => {
         console.log(e);

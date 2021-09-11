@@ -86,11 +86,11 @@ export default {
       this.socket.onmessage = (e) => {
         const parsedData = JSON.parse(e.data);
         console.log(parsedData);
-        console.log(parsedData.dataType === "receivedChat");
 
         if (parsedData.dataType === "receivedChat") {
           console.log("receivedChat");
           // チャットを受信した場合
+          new Audio(require("@/assets/hitsuji.mp3")).play();
           this.chatLogs.unshift({
             key: this.logKey++,
             name: parsedData.data.userName,
@@ -104,7 +104,7 @@ export default {
       };
       this.socket.onclose = (e) => {
         console.log(e);
-        // this.initializeWebSocket();
+        this.initializeWebSocket();
       };
       this.socket.onerror = (e) => {
         console.log(e);
