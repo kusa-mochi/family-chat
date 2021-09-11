@@ -100,6 +100,14 @@ export default {
         } else if (parsedData.dataType === "updatedConnectionId") {
           console.log("updatedConnectionId");
           this.isSendButtonEnabled = true;
+
+          parsedData.data.logs.forEach((log) => {
+            this.chatLogs.unshift({
+              key: this.logKey++,
+              name: log.userName,
+              message: log.message,
+            });
+          });
         }
       };
       this.socket.onclose = (e) => {

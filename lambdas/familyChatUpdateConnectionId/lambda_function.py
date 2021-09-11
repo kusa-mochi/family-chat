@@ -3,6 +3,7 @@ import json
 
 dynamodb = boto3.resource('dynamodb')
 connectionsTable = dynamodb.Table('family-chat-connections')
+logsTable = dynamodb.Table('family-chat-logs')
 
 def lambda_handler(event, context):
     print('updateConnectionId start.')
@@ -38,10 +39,27 @@ def lambda_handler(event, context):
         ReturnValues='UPDATED_NEW'
         )
     
-    # 更新した旨をクライアントに返信する。
+    # チャットログ
+    logs = logsTable.scan().get('Items')
+    if logs is None:
+        return {
+            'statusCode': '200',
+            'body': json.dumps('200')
+        }
+    logsArr = []
+    for log in logs:
+        logsArr.append({
+            'userName': log['userName'],
+            'message': log['message']
+        })
+    
+    # 更新した旨と、現在のチャットログをクライアントに返信する。
     am = boto3.client('apigatewaymanagementapi', endpoint_url=endpointUrl)
     _ = am.post_to_connection(ConnectionId=connectionId, Data=json.dumps({
-        'dataType': 'updatedConnectionId'
+        'dataType': 'updatedConnectionId',
+        'data': {
+            'logs': logsArr
+        }
     }))
     
     return {
