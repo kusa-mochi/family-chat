@@ -91,6 +91,8 @@ export default {
           console.log("receivedChat");
           // チャットを受信した場合
           new Audio(require("@/assets/sounds/hitsuji.mp3")).play();
+
+          // ログに追加する。
           this.chatLogs.unshift({
             key: this.logKey++,
             name: parsedData.data.userName,
@@ -101,6 +103,8 @@ export default {
           console.log("updatedConnectionId");
           this.isSendButtonEnabled = true;
 
+          // 受信したログの内容で初期化する。
+          this.chatLogs.splice(0, this.chatLogs.length);
           parsedData.data.logs.forEach((log) => {
             this.chatLogs.unshift({
               key: this.logKey++,
