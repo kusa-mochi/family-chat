@@ -44,7 +44,10 @@ export default {
     },
   },
   created() {
-    this.initializeWebSocket();
+    console.log("creating login component..");
+    if (this.socket === null) {
+      this.initializeWebSocket();
+    }
     if (this.token) {
       this.socket.send(
         JSON.stringify({
@@ -66,6 +69,7 @@ export default {
   },
   methods: {
     initializeWebSocket() {
+      console.log("initializing websocket on login component..");
       this.socket = new WebSocket(this.webSocketUrl);
       this.socket.onopen = (e) => {
         console.log(e);
@@ -91,11 +95,13 @@ export default {
           // トークンがシステムに登録されていないか、
           // もしくは有効期限切れで削除された後である場合
           // 何もしない。（ユーザにパスワード入力してもらう）
+        } else {
+          throw "invalid data type.";
         }
       };
       this.socket.onclose = (e) => {
         console.log(e);
-        this.initializeWebSocket();
+        // this.initializeWebSocket();
       };
       this.socket.onerror = (e) => {
         console.log(e);
@@ -110,6 +116,7 @@ export default {
           action: "sendPassword",
           data: {
             password: this.password,
+            userName: this.userName,
           },
         })
       );
@@ -144,10 +151,10 @@ export default {
 }
 .password-forms {
   display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	justify-content: flex-start;
-	align-items: flex-start;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 .invalid-password-label {
   color: red;

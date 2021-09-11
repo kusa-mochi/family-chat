@@ -8,8 +8,18 @@
         </div>
       </div>
       <div class="chat-form-container">
-        <input class="chat-input" placeholder="書きたい文をここに書いてね" />
-        <button class="send-button" type="button">
+        <input
+          v-model="stringToSend"
+          @keyup.enter="sendChat"
+          class="chat-input"
+          placeholder="書きたい文をここに書いてね"
+        />
+        <button
+          @click="sendChat"
+          :disabled="!isSendButtonEnabled"
+          class="send-button"
+          type="button"
+        >
           <img class="send-button-icon" src="@/assets/baby.svg" />
         </button>
       </div>
@@ -24,15 +34,18 @@ export default {
       get() {
         return this.$store.state.token;
       },
-      set(newValue) {
-        this.$store.state.token = newValue;
-      },
     },
     webSocketUrl: {
       get() {
         return this.$store.state.webSocketUrl;
       },
     },
+  },
+  created() {
+    console.log("creating chat component..");
+    if (this.socket === null) {
+      this.initializeWebSocket();
+    }
   },
   data() {
     return {
@@ -49,8 +62,77 @@ export default {
         //   message: "faegのｖせｒごｓｈごあｒがえがおえがｇなおｇはが",
         // },
       ],
+      logKey: 1,
+      isSendButtonEnabled: false,
+      stringToSend: "",
       socket: null,
     };
+  },
+  methods: {
+    initializeWebSocket() {
+      console.log("initializing websocket on chat component..");
+      this.socket = new WebSocket(this.webSocketUrl);
+      this.socket.onopen = (e) => {
+        console.log(e);
+        this.socket.send(
+          JSON.stringify({
+            action: "updateConnectionId",
+            data: {
+              token: this.token,
+            },
+          })
+        );
+      };
+      this.socket.onmessage = (e) => {
+        const parsedData = JSON.parse(e.data);
+        console.log(parsedData);
+        console.log(parsedData.dataType === "receivedChat");
+
+        if (parsedData.dataType === "receivedChat") {
+          console.log("receivedChat");
+          // チャットを受信した場合
+          this.chatLogs.unshift({
+            key: this.logKey++,
+            name: parsedData.data.userName,
+            message: parsedData.data.message,
+          });
+          return;
+        } else if (parsedData.dataType === "updatedConnectionId") {
+          console.log("updatedConnectionId");
+          this.isSendButtonEnabled = true;
+        }
+      };
+      this.socket.onclose = (e) => {
+        console.log(e);
+        // this.initializeWebSocket();
+      };
+      this.socket.onerror = (e) => {
+        console.log(e);
+      };
+    },
+    sendChat() {
+      // 文字列をLambdaに送る。
+      console.log("sending chat..");
+      console.log({
+        action: "sendChat",
+        data: {
+          token: this.token,
+          message: this.stringToSend,
+        },
+      });
+      this.socket.send(
+        JSON.stringify({
+          action: "sendChat",
+          data: {
+            token: this.token,
+            message: this.stringToSend,
+          },
+        })
+      );
+
+      // input要素の文字列をクリアする。
+      this.stringToSend = "";
+    },
   },
   name: "Chat",
 };
