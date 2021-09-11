@@ -14,6 +14,7 @@ def lambda_handler(event, context):
 
     postData = json.loads(event.get('body', '{}')).get('data')
     
+    
     # クライアントの宛先情報（WebSocketの接続ID）
     connectionId = event.get('requestContext', {}).get('connectionId')
     
@@ -26,6 +27,9 @@ def lambda_handler(event, context):
     
     # posted password
     password = postData['password']
+    
+    # posted user name
+    userName = postData['userName']
     
     # posted password hash
     postedPasswordHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
@@ -52,7 +56,7 @@ def lambda_handler(event, context):
     print(nowString)
     
     # トークンの有効期限
-    expirationDatetime = int((now + datetime.timedelta(hours=24)).timestamp())
+    expirationDatetime = int((now + datetime.timedelta(hours=1)).timestamp())
     
     # 現在時刻から新規にトークンを生成する。トークンは以後の通信でクライアントの識別に用いる。
     token = hashlib.sha256(nowString.encode('utf-8')).hexdigest()
@@ -60,10 +64,13 @@ def lambda_handler(event, context):
     
     #########################
     
-    # トークンを有効期限付でDBに登録する。
+    # トークンとユーザ名を有効期限付でDBに登録する。
     response = connectionsTable.put_item(Item={
         'token': token,
-        'expirationDatetime': expirationDatetime
+        'userName': userName,
+        'expirationDatetime': expirationDatetime,
+        'connectionId': connectionId,
+        'endpointUrl': endpointUrl
     })
     
     #########################
