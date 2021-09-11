@@ -54,14 +54,17 @@ def lambda_handler(event, context):
         }
     
     for connection in connections:
-        am = boto3.client('apigatewaymanagementapi', endpoint_url=connection['endpointUrl'])
-        _ = am.post_to_connection(ConnectionId=connection['connectionId'], Data=json.dumps({
-            'dataType': 'receivedChat',
-            'data': {
-                'message': message,
-                'userName': senderName
-            }
-        }))
+        try:
+            am = boto3.client('apigatewaymanagementapi', endpoint_url=connection['endpointUrl'])
+            _ = am.post_to_connection(ConnectionId=connection['connectionId'], Data=json.dumps({
+                'dataType': 'receivedChat',
+                'data': {
+                    'message': message,
+                    'userName': senderName
+                }
+            }))
+        except:
+            pass
     
     #########################
     
