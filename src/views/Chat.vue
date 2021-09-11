@@ -90,7 +90,7 @@ export default {
         if (parsedData.dataType === "receivedChat") {
           console.log("receivedChat");
           // チャットを受信した場合
-          new Audio(require("@/assets/hitsuji.mp3")).play();
+          new Audio(require("@/assets/sounds/hitsuji.mp3")).play();
           this.chatLogs.unshift({
             key: this.logKey++,
             name: parsedData.data.userName,
