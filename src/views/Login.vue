@@ -49,6 +49,7 @@ export default {
       this.initializeWebSocket();
     }
     if (this.token) {
+      console.log(`token exist on local storage: ${this.token}`);
       this.socket.send(
         JSON.stringify({
           action: "validateToken",
@@ -57,6 +58,8 @@ export default {
           },
         })
       );
+    } else {
+      console.log("token is not found on local storage.");
     }
   },
   data() {
