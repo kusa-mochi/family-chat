@@ -41,6 +41,11 @@
 <script>
 export default {
   computed: {
+    isSendButtonEnabled: {
+      get() {
+        return this.updatedConnectionId && this.stringToSend;
+      },
+    },
     token: {
       get() {
         return this.$store.state.token;
@@ -74,7 +79,7 @@ export default {
         // },
       ],
       logKey: 1,
-      isSendButtonEnabled: false,
+      updatedConnectionId: false,
       stringToSend: "",
       socket: null,
     };
@@ -112,7 +117,7 @@ export default {
           return;
         } else if (parsedData.dataType === "updatedConnectionId") {
           console.log("updatedConnectionId");
-          this.isSendButtonEnabled = true;
+          this.updatedConnectionId = true;
 
           // 受信したログの内容で初期化する。
           this.chatLogs.splice(0, this.chatLogs.length);
@@ -146,6 +151,8 @@ export default {
       }
     },
     sendChat() {
+      // Enterキーによって空の文字列が送信されてしまうのを防止する。
+      if (!this.isSendButtonEnabled) return;
       // 文字列をLambdaに送る。
       console.log("sending chat..");
       console.log({
