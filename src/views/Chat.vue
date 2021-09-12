@@ -125,16 +125,6 @@ export default {
               name: log.userName,
               message: log.message,
             });
-            this.chatLogs.unshift({
-              key: this.logKey++,
-              name: log.userName,
-              message: log.message,
-            });
-            this.chatLogs.unshift({
-              key: this.logKey++,
-              name: log.userName,
-              message: log.message,
-            });
           });
         }
       };
