@@ -13,12 +13,14 @@
           @keyup.enter="sendChat"
           class="chat-input"
           placeholder="書きたい文をここに書いてね"
-        ></el-input>
-        <el-button
-          @click="sendChat"
-          :disabled="!isSendButtonEnabled"
-          class="send-button"
-        >送信</el-button>
+          ><el-button
+            slot="append"
+            @click="sendChat"
+            :disabled="!isSendButtonEnabled"
+            class="send-button"
+            >送信</el-button
+          ></el-input
+        >
       </div>
     </div>
   </div>
@@ -102,7 +104,11 @@ export default {
 
           // 受信したログの内容で初期化する。
           this.chatLogs.splice(0, this.chatLogs.length);
-          parsedData.data.logs.forEach((log) => {
+          let logs = parsedData.data.logs.slice();
+          logs.sort(
+            (logA, logB) => logA.expirationDatetime - logB.expirationDatetime
+          );
+          logs.forEach((log) => {
             this.chatLogs.unshift({
               key: this.logKey++,
               name: log.userName,
@@ -173,8 +179,9 @@ export default {
 .chat-logs {
   width: 100%;
   height: 500px;
-  background-color: transparent;
-  border: 1px solid gray;
+  background-color: #fafafa;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
   margin-bottom: 8px;
 
   display: flex;
@@ -189,6 +196,8 @@ export default {
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: flex-start;
+
+    margin: 4px;
 
     $userNameWidth: 100px;
     &__user-name {
@@ -209,11 +218,6 @@ export default {
   align-items: flex-start;
 }
 .chat-input {
-  width: calc(100% - 32px);
+  width: 100%;
 }
-.send-button {
-  width: 32px;
-}
-// .send-button-icon {
-// }
 </style>
