@@ -125,6 +125,16 @@ export default {
               name: log.userName,
               message: log.message,
             });
+            this.chatLogs.unshift({
+              key: this.logKey++,
+              name: log.userName,
+              message: log.message,
+            });
+            this.chatLogs.unshift({
+              key: this.logKey++,
+              name: log.userName,
+              message: log.message,
+            });
           });
         }
       };
@@ -204,6 +214,8 @@ export default {
   background-color: #fafafa;
   border-radius: 4px;
   border: 1px solid #dcdfe6;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column-reverse;
