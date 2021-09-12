@@ -50,7 +50,8 @@ def lambda_handler(event, context):
     for log in logs:
         logsArr.append({
             'userName': log['userName'],
-            'message': log['message']
+            'message': log['message'],
+            'expirationDatetime': int(log['expirationDatetime'])
         })
     
     # 更新した旨と、現在のチャットログをクライアントに返信する。

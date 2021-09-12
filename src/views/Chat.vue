@@ -102,7 +102,11 @@ export default {
 
           // 受信したログの内容で初期化する。
           this.chatLogs.splice(0, this.chatLogs.length);
-          parsedData.data.logs.forEach((log) => {
+          let logs = parsedData.data.logs.slice();
+          logs.sort(
+            (logA, logB) => logA.expirationDatetime - logB.expirationDatetime
+          );
+          logs.forEach((log) => {
             this.chatLogs.unshift({
               key: this.logKey++,
               name: log.userName,
