@@ -6,27 +6,31 @@
           <div class="log-item__user-name">{{ item.name }}:</div>
           <div class="log-item__message">
             <template v-if="isUrl(item.message)">
-              <a :href="item.message">{{item.message}}</a>
+              <a :href="item.message">{{ item.message }}</a>
             </template>
             <template v-else>
-              {{item.message}}
+              {{ item.message }}
             </template>
           </div>
         </div>
       </div>
       <div class="chat-form-container">
-        <el-input
-          v-model="stringToSend"
-          @keyup.enter="sendChat"
-          class="chat-input"
-          placeholder="書きたい文をここに書いてね"
-          ><el-button
-            slot="append"
-            @click="sendChat"
-            :disabled="!isSendButtonEnabled"
-            class="send-button"
-            >送信</el-button
-          ></el-input>
+        <el-form class="chat-form" @submit.native.prevent="sendChat">
+          <el-form-item class="chat-form-item">
+            <el-input
+              v-model="stringToSend"
+              class="chat-input"
+              placeholder="書きたい文をここに書いてね"
+              ><el-button
+                slot="append"
+                @click="sendChat"
+                :disabled="!isSendButtonEnabled"
+                class="send-button"
+                >送信</el-button
+              ></el-input
+            >
+          </el-form-item>
+        </el-form>
       </div>
     </div>
   </div>
@@ -233,6 +237,12 @@ export default {
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: flex-start;
+}
+.chat-form {
+  width: 100%;
+}
+.chat-form-item {
+  width: 100%;
 }
 .chat-input {
   width: 100%;
