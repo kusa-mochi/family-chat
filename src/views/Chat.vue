@@ -27,9 +27,10 @@
                 @click="sendChat"
                 :disabled="!isSendButtonEnabled"
                 class="send-button"
-                >送信</el-button
-              ></el-input
-            >
+                ><img
+                  class="send-button__icon"
+                  src="@/assets/baby.svg" /></el-button
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -177,6 +178,7 @@ export default {
 
 <style lang="scss" scoped>
 #chat {
+  position: relative;
   width: 100%;
   height: 100%;
 
@@ -187,6 +189,7 @@ export default {
   align-items: center;
 }
 .chat-container {
+  position: relative;
   width: 50%;
   height: 100%;
   padding: 8px;
@@ -199,8 +202,8 @@ export default {
   align-items: center;
 }
 .chat-logs {
+  position: relative;
   width: 100%;
-  height: 500px;
   background-color: #fafafa;
   border-radius: 4px;
   border: 1px solid #dcdfe6;
@@ -212,6 +215,8 @@ export default {
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: flex-start;
+
+  flex-grow: 1;
 
   .log-item {
     display: flex;
@@ -240,6 +245,7 @@ export default {
   }
 }
 .chat-form-container {
+  position: relative;
   width: 100%;
 
   display: flex;
@@ -253,9 +259,15 @@ export default {
 }
 .chat-form-item {
   width: 100%;
+  margin: 0;
 }
 .chat-input {
   width: 100%;
+}
+.send-button {
+  &__icon {
+    width: 32px;
+  }
 }
 
 @media screen and (max-width: 850px) {
