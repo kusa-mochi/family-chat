@@ -4,7 +4,14 @@
       <div class="chat-logs">
         <div v-for="item in chatLogs" :key="item.key" class="log-item">
           <div class="log-item__user-name">{{ item.name }}:</div>
-          <div class="log-item__message">{{ item.message }}</div>
+          <div class="log-item__message">
+            <template v-if="isUrl(item.message)">
+              <a :href="item.message">{{item.message}}</a>
+            </template>
+            <template v-else>
+              {{item.message}}
+            </template>
+          </div>
         </div>
       </div>
       <div class="chat-form-container">
@@ -19,8 +26,7 @@
             :disabled="!isSendButtonEnabled"
             class="send-button"
             >送信</el-button
-          ></el-input
-        >
+          ></el-input>
       </div>
     </div>
   </div>
@@ -124,6 +130,14 @@ export default {
       this.socket.onerror = (e) => {
         console.log(e);
       };
+    },
+    isUrl(s) {
+      try {
+        new URL(s);
+        return true;
+      } catch {
+        return false;
+      }
     },
     sendChat() {
       // 文字列をLambdaに送る。
