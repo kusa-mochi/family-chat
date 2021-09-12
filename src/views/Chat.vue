@@ -29,7 +29,7 @@
                 class="send-button"
                 ><img
                   class="send-button__icon"
-                  src="@/assets/baby.svg" /></el-button
+                  src="@/assets/images/baby.png" /></el-button
             ></el-input>
           </el-form-item>
         </el-form>
@@ -223,7 +223,7 @@ export default {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: stretch;
 
     margin: 4px;
 
