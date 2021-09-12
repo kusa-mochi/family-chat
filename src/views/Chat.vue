@@ -18,6 +18,7 @@
         <el-form class="chat-form" @submit.native.prevent="sendChat">
           <el-form-item class="chat-form-item">
             <el-input
+              ref="chatinput"
               v-model="stringToSend"
               class="chat-input"
               placeholder="書きたい文をここに書いてね"
@@ -166,6 +167,9 @@ export default {
       // input要素の文字列をクリアする。
       this.stringToSend = "";
     },
+  },
+  mounted() {
+    this.$refs.chatinput.focus();
   },
   name: "Chat",
 };
