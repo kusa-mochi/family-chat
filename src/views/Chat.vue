@@ -182,7 +182,6 @@ export default {
   background-color: #fafafa;
   border-radius: 4px;
   border: 1px solid #dcdfe6;
-  margin-bottom: 8px;
 
   display: flex;
   flex-direction: column-reverse;
@@ -202,9 +201,13 @@ export default {
     $userNameWidth: 100px;
     &__user-name {
       width: $userNameWidth;
+      overflow-wrap: break-word;
+      word-break: break-all;
     }
     &__message {
       width: calc(100% - #{$userNameWidth});
+      overflow-wrap: break-word;
+      word-break: break-all;
     }
   }
 }
