@@ -187,9 +187,9 @@ export default {
   align-items: center;
 }
 .chat-container {
-  width: 360px;
+  width: 50%;
   height: 100%;
-  padding: 16px;
+  padding: 8px;
   background-color: #f0f0f0;
 
   display: flex;
@@ -227,11 +227,15 @@ export default {
       width: $userNameWidth;
       overflow-wrap: break-word;
       word-break: break-all;
+      border-right: 1px solid #169632;
+      background-color: rgba(#169632, 0.1);
+      padding: 4px;
     }
     &__message {
       width: calc(100% - #{$userNameWidth});
       overflow-wrap: break-word;
       word-break: break-all;
+      padding: 4px;
     }
   }
 }
@@ -252,5 +256,22 @@ export default {
 }
 .chat-input {
   width: 100%;
+}
+
+@media screen and (max-width: 850px) {
+  .chat-container {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 630px) {
+  .chat-container {
+    width: 90%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .chat-container {
+    width: 100%;
+    padding: 0;
+  }
 }
 </style>
