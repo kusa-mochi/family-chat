@@ -6,7 +6,7 @@
           <div class="log-item__user-name">{{ item.name }}:</div>
           <div class="log-item__message">
             <template v-if="isUrl(item.message)">
-              <a :href="item.message">{{ item.message }}</a>
+              <a :href="item.message" target="_blank">{{ item.message }}</a>
             </template>
             <template v-else>
               {{ item.message }}
