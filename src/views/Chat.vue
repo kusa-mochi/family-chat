@@ -3,7 +3,7 @@
     <div class="chat-container">
       <div class="chat-logs">
         <div v-for="item in chatLogs" :key="item.key" class="log-item">
-          <div class="log-item__user-name">{{ item.name }}:</div>
+          <div class="log-item__user-name">{{ item.name }}</div>
           <div class="log-item__message">
             <template v-if="isUrl(item.message)">
               <a :href="item.message" target="_blank">{{ item.message }}</a>
